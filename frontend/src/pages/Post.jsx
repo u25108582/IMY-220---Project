@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
@@ -6,28 +6,52 @@ import Comments from '../components/Comments';
 import Image from '../components/Image';
 import Tags from '../components/Tags';
 
-import tree from '../assets/tree.jpg';
-
-const post = {
-  id: 1,
-  title: "A nice Tree",
-  author: "BobTheTomato",
-  authodID: 1,
-  tags: ["Tree", "Nature", "interesting Facts"],
-  content: "Did you know, Trees are good for the environment?",
-  img: tree,
-  likes: "2.5k",
-  comments: [
-    { id: 1, user: "BobMarley", time: "2h ago", text: "Cool tree" },
-    { id: 2, user: "Tree", time: "5m ago", text: "Hello There" },
-    { id: 3, user: "Peter", time: "3 days ago", text: "Thats good to know" },
-  ]
-};
-
 function PostDetail() {
-  const param = useParams();
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  console.log("PostID: ", param.id)
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/post/${id}`);
+        if (!response.ok) {
+          throw new Error("Post not found");
+        }
+        const data = await response.json();
+        setPost(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPost();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <>
+        <Navigation searchbar={true} />
+        <main style={{ textAlign: 'center', marginTop: '40px' }}>
+          <p>Loading post...</p>
+        </main>
+      </>
+    );
+  }
+
+  if (error || !post) {
+    return (
+      <>
+        <Navigation searchbar={true} />
+        <main style={{ textAlign: 'center', marginTop: '40px' }}>
+          <p style={{ color: 'red' }}>{error || "Post not found"}</p>
+        </main>
+      </>
+    );
+  }
 
   return (
     <>
@@ -35,24 +59,24 @@ function PostDetail() {
 
       <main>
         <div className="post">
-          <h2 className="post-title">{post.title}</h2>
+          <h2 className="post-title">{post.Title}</h2>
 
           <span className="post-author">
-            Posted by <Link to={`/Profile/${post.author}`} className="author-link">{post.author}</Link>
+            Posted by <Link to={`/Profile/${post.Author}`} className="author-link">{post.Author}</Link>
           </span>
 
-          <Image img={post.img} alt={"Picture of a tree"} />
+          <Image img={post.Images?.[0]} alt={post.Title} />
 
-          <Tags tags={post.tags} />
+          <Tags tags={post.Tags} />
 
-          <p className="post-text">{post.content}</p>
+          {post.content && <p className="post-text">{post.content}</p>}
 
           <div className="post-stat">
-            <span>{post.likes} Likes</span>
-            <span>{post.comments.length} Comments</span>
+            <span>{post.Likes} Likes</span>
+            <span>{post.Comments?.length || 0} Comments</span>
           </div>
 
-          <Comments comments={post.comments}/>
+          <Comments comments={post.Comments} />
         </div>
       </main>
     </>

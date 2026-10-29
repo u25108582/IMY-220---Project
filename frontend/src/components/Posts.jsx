@@ -2,7 +2,9 @@ import { Link } from "react-router-dom";
 
 import Image from "./Image"
 
-const Posts = ({ id, title, author, img, alt, likes, comments }) => {
+const Posts = ({ id, title, author, img, tags, likes, comments, posted }) => {
+    const count = comments ? comments.length : 0;
+
     return (
         <Link to={`/Post/${id}`} className="post-link">
             <div className="post">
@@ -12,11 +14,11 @@ const Posts = ({ id, title, author, img, alt, likes, comments }) => {
                     - Posted by {author}
                 </span>
 
-                <Image img={img} alt={alt} />
+                <Image img={img} />
 
                 <div className="post-stats">
                     <span>{likes} Likes</span>
-                    <span>{comments} Comments</span>
+                    <span>{count} Comments</span>
                 </div>
             </div>
         </Link>

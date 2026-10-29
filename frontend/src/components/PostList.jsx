@@ -6,14 +6,15 @@ function PostList({ posts }) {
         <div className="post-list">
             {posts.map((post) => (
                 <Posts
-                    key={post.id}
-                    id={post.id}
-                    title={post.title}
-                    author={post.author}
-                    img={post.img}
-                    alt={post.alt}
-                    likes={post.likes}
-                    comments={post.comments}
+                    key={post._id}
+                    id={post._id}
+                    title={post.Title}
+                    author={post.Author}
+                    img={post.Images?.[0]}
+                    tags={post.Tags}
+                    likes={post.Likes}
+                    comments={post.Comments}
+                    posted={post.Posted}
                 />
             ))}
         </div>

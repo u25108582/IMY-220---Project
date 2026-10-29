@@ -2,18 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
-    const [username, setUsername] = useState('');
+    const [userOrEmail, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const nav = useNavigate();
 
     const login = async () => {
-        if (username.trim() == "" || password.trim() == "") {
+        if (userOrEmail.trim() == "" || password.trim() == "") {
             return;
         }
 
-        if (username.length < 3) {
-            console.log("Username is too short");
+        if (userOrEmail.length < 3) {
+            console.log("Username/Email is too short");
             return;
         }
 
@@ -22,20 +22,22 @@ function Login() {
             return;
         }
 
-
         try {
             const resp = await fetch("http://localhost:3000/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ userOrEmail, password })
             });
 
             const data = await resp.json();
-            
-            if (data.message == "Login") {
-                console.log("Loggin in");
-                nav("/Home");
+            if (!resp.ok) {
+                throw new Error(data.error || 'Failed to login');
             }
+
+            console.log("Loggin in");
+            localStorage.setItem('user', JSON.stringify(data.user));
+
+            nav("/Home");
         } catch (error) {
             console.log(error);
         }
@@ -47,8 +49,8 @@ function Login() {
                 <div className="input-group">
                     <input
                         type="text"
-                        placeholder="Username"
-                        value={username}
+                        placeholder="Username or Email"
+                        value={userOrEmail}
                         onChange={(e) => setUsername(e.target.value)}
                         required
                     />

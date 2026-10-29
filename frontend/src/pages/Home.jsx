@@ -1,51 +1,46 @@
+import { useState, useEffect } from 'react';
+
 import Navigation from "../components/Navigation";
 import PostList from "../components/PostList"
 import Filters from "../components/Filters"
 
-import tree from '../assets/tree.jpg';
-import elephant from '../assets/elephant.jpg';
-import giraffe from '../assets/giraffe.jpg';
-
-const postsData = [
-  {
-    id: 1,
-    title: "Tree",
-    author: "BobTheTomato",
-    img: tree,
-    alt: "Image of tree",
-    likes: 12,
-    comments: 4
-  },
-  {
-    id: 2,
-    title: "Picture of a Elephant",
-    author: "NatureLover",
-    img: elephant,
-    alt: "Image of a elephant",
-    likes: 34,
-    comments: 13
-  },
-  {
-    id: 3,
-    title: "Tall boy",
-    author: "AverageJoe",
-    img: giraffe,
-    alt: "Image of a giraffe",
-    likes: 29,
-    comments: 6
-  },
-  {
-    id: 4,
-    title: "No image here",
-    author: "TristanTheTester",
-    img: null,
-    alt: "Image not existant",
-    likes: -9,
-    comments: -2
-  }
-];
-
 function Home() {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/posts");
+        if (!response.ok) {
+          throw new Error("Failed to fetch posts");
+        }
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+    return (
+      <>
+        <Navigation searchbar={true} />
+
+        <main>
+          <Filters />
+
+          <p>Loading posts...</p>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Navigation searchbar={true} />
@@ -53,7 +48,7 @@ function Home() {
       <main>
         <Filters />
         
-        <PostList posts={postsData} />
+        <PostList posts={posts} />
       </main>
     </>
   );

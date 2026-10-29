@@ -363,3 +363,84 @@ nav a {
   color: #d1d5db;
   padding: 0 10px;
 }
+
+.account-page {
+  max-width: 650px;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.account-loading {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-faded);
+}
+
+.account-group {
+  background-color: var(--bg-mid);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.account-group-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+  padding: 16px 20px 8px 20px;
+  margin: 0;
+}
+
+.account-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.account-row:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.account-label {
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.account-value-preview {
+  font-size: 13px;
+  color: var(--text-faded);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arrow {
+  font-size: 14px;
+  color: var(--text-faded);
+  font-weight: bold;
+}
+
+.text-danger {
+  color: var(--text-error) !important;
+}
+
+.account-delete-row:hover {
+  background-color: rgba(177, 50, 50, 0.05);
+}
+
+.nav-logout-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
